@@ -22,6 +22,7 @@
 // Transformation helper code
 #include <Eigen/Eigen>
 #include <Eigen/Geometry>
+#include <unistd.h>
 
 namespace gazebo {
 
@@ -282,9 +283,10 @@ bool FreeFlyerSensorPlugin::ExtrinsicsCallback(
     if (sensor_->Type() == "camera") {
       sensors::CameraSensorPtr sensor
         = std::dynamic_pointer_cast<sensors::CameraSensor>(sensor_);
-      if (sensor && sensor->Camera())
+      if (sensor && sensor->Camera()) {
+        // sleep(120);
         sensor->Camera()->SetWorldPose(world_pose);
-      else
+      } else
         return false;
     }
 
@@ -292,9 +294,10 @@ bool FreeFlyerSensorPlugin::ExtrinsicsCallback(
     if (sensor_->Type() == "wideanglecamera") {
       std::shared_ptr<sensors::WideAngleCameraSensor> sensor =
         std::dynamic_pointer_cast<sensors::WideAngleCameraSensor>(sensor_);
-      if (sensor && sensor->Camera())
+      if (sensor && sensor->Camera()) {
+        // sleep(120);
         sensor->Camera()->SetWorldPose(world_pose);
-      else
+      } else
         return false;
     }
 

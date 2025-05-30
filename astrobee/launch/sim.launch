@@ -95,6 +95,9 @@
   <!-- Declare our global logging format -->
   <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] : (${logger}) ${message}"/>
 
+  <!-- Set simulation parameter -->
+  <param name="krpc/on_simulation" value="true" />
+
   <!-- Always launch on the local machine -->
   <group>
     <machine name ="local" address="localhost" default="true"/>
@@ -249,4 +252,15 @@
   </group>
 
 
+  <node name="noise" pkg="topic_tools" type="relay" args="/gnc/ekf /gnc/ekf_noise" respawn="true" />
+  <node name="teleop_tool" pkg="executive" type="teleop_tool" args="-set_face_forward 'off'" />
+  <node name="marker_publisher" pkg="rostopic" type="rostopic"
+    args="pub --once /command ff_msgs/CommandStamped &quot;{
+                cmd_name: 'setOperatingLimits', subsys_name: 'Settings', args: [
+                {data_type: 5, s: iss_jaxa}, {data_type: 5, s: nominal},
+                {data_type: 2, f: 0.1500}, {data_type: 2, f: 0.0175},
+                {data_type: 2, f: 0.0873}, {data_type: 2, f:  0.1745},
+                {data_type: 2, f: 0}
+  ]
+  }&quot;" />
 </launch>

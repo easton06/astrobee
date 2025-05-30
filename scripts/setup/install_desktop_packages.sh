@@ -50,12 +50,12 @@ then
  
   if [ "${NO_TUNNEL}" -eq 1 ]; then
       echo "Getting the custom Debian without tunnel"
-      sudo /bin/bash -c "echo \"deb [arch=amd64] https://astrobee.ndc.nasa.gov/software_new ${DIST} main\" > $arssrc" || exit 1
-      sudo /bin/bash -c "echo \"deb-src https://astrobee.ndc.nasa.gov/software_new ${DIST} main\" >> $arssrc" || exit 1
+      /bin/bash -c "echo \"deb [arch=amd64] https://astrobee.ndc.nasa.gov/software_new ${DIST} main\" > $arssrc" || exit 1
+      /bin/bash -c "echo \"deb-src https://astrobee.ndc.nasa.gov/software_new ${DIST} main\" >> $arssrc" || exit 1
   else
       echo "Tunnelling to get the custom Debian"
-      sudo /bin/bash -c "echo \"deb [arch=amd64] https://127.0.0.1:8765/software_new ${DIST} main\" > $arssrc" || exit 1
-      sudo /bin/bash -c "echo \"deb-src https://127.0.0.1:8765/software_new ${DIST} main\" >> $arssrc" || exit 1
+      /bin/bash -c "echo \"deb [arch=amd64] https://127.0.0.1:8765/software_new ${DIST} main\" > $arssrc" || exit 1
+      /bin/bash -c "echo \"deb-src https://127.0.0.1:8765/software_new ${DIST} main\" >> $arssrc" || exit 1
       ssh -N -L 127.0.0.1:8765:astrobee.ndc.nasa.gov:443 ${username}m.ndc.nasa.gov &
   fi
   
@@ -63,14 +63,14 @@ then
   sleep 1
 fi
 
-sudo apt-get update || exit 1
+apt-get update || exit 1
 
-if ! sudo apt-get install -m -y $pkgs; then
+if ! apt-get install -m -y $pkgs; then
   filter_pkgs="libroyale-dev rti-dev libsoracore-dev libmiro-dev libroyale1 rti libmiro0 libsoracore1"
   for p in $filter_pkgs; do
     pkgs=${pkgs//$p/}
   done
-  sudo apt-get install -m -y $pkgs || {
+  apt-get install -m -y $pkgs || {
     echo "Couldn't install a necessary package."
     exit 1
   }
@@ -81,5 +81,5 @@ if [ "$DIST" == "focal" ]; then
   echo "Ubuntu 20.04 Focal Fossa detected"
 
   echo "If 'python' interpreter is missing, point to 'python3'"
-  which python >/dev/null || sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+  which python >/dev/null || update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 fi

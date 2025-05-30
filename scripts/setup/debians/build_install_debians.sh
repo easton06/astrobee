@@ -25,7 +25,7 @@ debian_loc=$(dirname "$(readlink -f "$0")")
 dist=$(. /etc/os-release && echo $UBUNTU_CODENAME)
 build_list=()
 
-sudo apt-get install -y devscripts equivs libproj-dev
+apt-get install -y devscripts equivs libproj-dev
 # delete old files (-f avoids 'no such file' warning on first run)
 rm -f *.deb *.debian.tar.xz *.orig.tar.gz *.dsc *.build *.buildinfo *.changes *.ddeb
 
@@ -41,8 +41,8 @@ export DEBEMAIL="nospam@nospam.org"
 for pkg in ${build_list[@]}
 do
   cd ${debian_loc}/$pkg &&
-  sudo mk-build-deps -i -r -t "apt-get --no-install-recommends -y" control &&
+  mk-build-deps -i -r -t "apt-get --no-install-recommends -y" control &&
   cd ${debian_loc} &&
   ./build_${pkg}.sh &&
-  sudo dpkg -i *${pkg}*.deb || exit 1
+  dpkg -i *${pkg}*.deb || exit 1
 done
